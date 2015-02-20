@@ -20,11 +20,7 @@ module Qif
     attr_reader :index
   
     SUPPORTED_ACCOUNTS = {
-      "!Type:Bank" => "Bank account transactions",
-      "!Type:Cash" => "Cash account transactions",
-      "!Type:CCard" => "Credit card account transactions",
-      "!Type:Oth A" => "Asset account transactions",
-      "!Type:Oth L" => "Liability account transactions"
+      "!Type:Invst" => "Investment account transactions"
     }
 
     class UnknownAccountType < StandardError; end
@@ -39,7 +35,8 @@ module Qif
     # if guessing method fails.
     def initialize(data, format = nil)
       @data = data.respond_to?(:read) ? data : StringIO.new(data.to_s)
-      @format = DateFormat.new(format || guess_date_format || 'dd/mm/yyyy')
+      #@format = DateFormat.new(format || guess_date_format || 'dd/mm/yyyy')
+      @format = DateFormat.new('mm/dd\'yy')
       read_header
       raise(UnrecognizedData, "Provided data doesn't seems to represent a QIF file") unless @header
       raise(UnknownAccountType, "Unknown account type. Should be one of followings :\n#{SUPPORTED_ACCOUNTS.keys.inspect}") unless SUPPORTED_ACCOUNTS.keys.collect(&:downcase).include? @header.downcase
@@ -170,24 +167,23 @@ module Qif
         builder =
           case key
             when 'D' then builder.set_date(line)
-            when 'T' then builder.set_amount(line)
-            when 'A' then builder.set_address(line)
-            when 'C' then builder.set_status(line)
-            when 'N' then builder.set_number(line)
-            when 'P' then builder.set_payee(line)
+            when 'N' then builder.set_action(line)
+            when 'Y' then builder.set_security(line)
+            when 'I' then builder.set_price(line)
+            when 'Q' then builder.set_quantity(line)
+            when 'T' then builder.set_transaction_amount(line)
+            when 'C' then builder.set_cleared_status(line)
+            when 'P' then builder.set_reminders(line)
             when 'M' then builder.set_memo(line)
-            when 'L' then builder.set_category(line)
-            when 'S' then builder.add_split(line)
-            when 'E' then builder.set_split_memo(line)
-            when '$' then builder.set_split_amount(line)
+            when 'O' then builder.set_commission(line)
+            when 'L' then builder.set_transfer_account(line)
+            when '$' then builder.set_transfer_amount(line)
             else builder
           end
       end until key == "^"
       builder.build
       rescue EOFError => e
         @data.close
-        nil
-      rescue Exception => e
         nil
     end
   end

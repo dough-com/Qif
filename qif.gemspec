@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.description               = "A library for reading and writing quicken QIF files."
   s.summary                   = "A library for reading and writing quicken QIF files."
   s.email                     = "jemmyw@gmail.com"
-  s.extra_rdoc_files          = ["CHANGELOG", "LICENSE", "README.rdoc", "lib/qif.rb", "lib/qif/date_format.rb", "lib/qif/reader.rb", "lib/qif/transaction.rb", "lib/qif/writer.rb"]
+  s.extra_rdoc_files          = ["CHANGELOG", "LICENSE", "README.rdoc", "lib/qif.rb", "lib/qif/date_format.rb", "lib/qif/reader.rb", "lib/qif/transaction.rb"]
   s.files                     = include_files - exclude_files
   s.homepage                  = "http://qif.github.com/qif"
   s.rdoc_options              = ["--line-numbers", "--inline-source", "--title", "Qif", "--main", "README.rdoc"]

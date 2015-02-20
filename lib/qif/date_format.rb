@@ -5,6 +5,8 @@ module Qif
     attr_reader :format
 
     SUPPORTED_DATEFORMAT = {
+      "mm/dd'yy"  => "%m/%d'%y",
+
       "dd/mm/yyyy"  => "%d/%m/%Y",
       "d/mm/yyyy"   => "%d/%m/%Y",
       "dd/m/yyyy"   => "%d/%m/%Y",

@@ -4,11 +4,6 @@ require 'qif/transaction/split/builder'
 
 describe Qif::Transaction::Builder do
   let(:builder) { Qif::Transaction::Builder.new }
-  def split_builder
-    double(Qif::Transaction::Split::Builder).tap do |b|
-      allow(b).to receive(:set_split_category).and_return(b)
-    end
-  end
   def do_build
     builder.build
   end
@@ -16,25 +11,6 @@ describe Qif::Transaction::Builder do
   context '#build' do
     it 'should return a transaction object' do
       expect(builder.build).to be_kind_of(Qif::Transaction)
-    end
-
-    context 'with splits' do
-      it 'should call build_split on each of the splits' do
-        sb1 = split_builder
-        sb2 = split_builder
-        allow(Qif::Transaction::Split::Builder).to receive(:new).and_return(sb1, sb2)
-        expect(sb1).to receive(:build_split).ordered
-        expect(sb2).to receive(:build_split).ordered
-        builder.add_split("a")
-        builder.add_split("b")
-        builder.build
-      end
-
-      it 'should add the splits to the transaction' do
-        builder.add_split("a")
-        builder.add_split("b")
-        expect(builder.build.splits.count).to eq(2)
-      end
     end
   end
 
@@ -47,76 +23,48 @@ describe Qif::Transaction::Builder do
     end
   end
 
-  context '#set_amount' do
-    it_should_behave_like 'builder method', :amount, '-1000.00', :set_amount, -1000.0
-    it 'should parse commas out of the amount' do
-      builder.set_amount('1,000,000')
-      expect(builder.build.amount).to eq(1_000_000)
-    end
+  context '#set_action' do
+    it_should_behave_like 'builder method', :action, 'Buy', :set_action, 'Buy'
   end
 
-  context '#set_status' do
-    it_should_behave_like 'builder method', :status, 'X', :set_status, 'X'
+  context '#set_security' do
+    it_should_behave_like 'builder method', :security, 'ZNGA - ZYNGA INC', :set_security, 'ZNGA - ZYNGA INC'
   end
 
-  context '#set_number' do
-    it_should_behave_like 'builder method', :number, '1005', :set_number, '1005'
+  context '#set_price' do
+    it_should_behave_like 'builder method', :price, '2.3075', :set_price, '2.3075'
   end
 
-  context '#set_payee' do
-    it_should_behave_like 'builder method', :payee, 'Bank of Mortgage', :set_payee, 'Bank of Mortgage'
+  context '#set_quantity' do
+    it_should_behave_like 'builder method', :quantity, '100', :set_quantity, '100'
+  end
+
+  context '#set_transaction_amount' do
+    it_should_behave_like 'builder method', :transaction_amount, '239.7', :set_transaction_amount, '239.7'
+  end
+
+  context '#set_cleared_status' do
+    it_should_behave_like 'builder method', :cleared_status, '?', :set_cleared_status, '?'
+  end
+
+  context '#set_reminders' do
+    it_should_behave_like 'builder method', :reminders, '?', :set_reminders, '?'
   end
 
   context '#set_memo' do
-    it_should_behave_like 'builder method', :memo, 'Some stuff that happened', :set_memo, 'Some stuff that happened'
+    it_should_behave_like 'builder method', :memo, '159694322', :set_memo, '159694322'
   end
 
-  context '#set_category' do
-    it_should_behave_like 'builder method', :category, 'Fishing', :set_category, 'Fishing'
+  context '#set_commission' do
+    it_should_behave_like 'builder method', :commission, '8.95', :set_commission, '8.95'
   end
 
-  context '#set_address' do
-    address = <<-EOA
-      P.O. Box 1234
-      Somewhereton
-      12345
-    EOA
-    
-    it_should_behave_like 'builder method', :adress, address, :set_adress, address
-
-    context 'when called consecutively' do
-      it "should append to the address" do
-        builder
-          .set_address("Line 1")
-          .set_address("Line 2")
-        expect(do_build.address).to eq("Line 1\nLine 2")
-      end
-    end
+  context '#set_transfer_account' do
+    it_should_behave_like 'builder method', :transfer_account, '?', :set_transfer_account, '?'
   end
 
-  context "#add_split" do
-    it 'should create a new split builder' do
-      expect(Qif::Transaction::Split::Builder).to receive(:new).with(builder).and_return(split_builder)
-      builder.add_split("aaa")
-    end
-
-    it 'should set the category on the split builder' do
-      sb = split_builder
-      allow(Qif::Transaction::Split::Builder).to receive(:new).and_return(sb)
-      expect(sb).to receive(:set_split_category).with('aaaa')
-      builder.add_split('aaaa')
-    end
-
-    it "should return a split builder" do
-      expect(builder.add_split('aaaa')).to be_kind_of(Qif::Transaction::Split::Builder)
-    end
-
-    context "when called multiple times" do
-      it "should return multiple different builders" do
-        sb1 = builder.add_split("aaaa")
-        expect(builder.add_split("bbbb")).to_not eq(sb1)
-      end
-    end
+  context '#set_transfer_amount' do
+    it_should_behave_like 'builder method', :transfer_amount, '?', :set_transfer_amount, '?'
   end
 
 end

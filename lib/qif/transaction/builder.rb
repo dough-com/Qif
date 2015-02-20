@@ -12,31 +12,19 @@ class Qif::Transaction::Builder
   end
 
   set_builder_method :date, :parse_date
-  set_builder_method :amount, ->(amt) { AmountParser.parse(amt) }
-  set_builder_method :status
-  set_builder_method :number
-  set_builder_method :payee
+  set_builder_method :action
+  set_builder_method :security
+  set_builder_method :price
+  set_builder_method :quantity
+  set_builder_method :transaction_amount
+  set_builder_method :cleared_status
+  set_builder_method :reminders
   set_builder_method :memo
-  set_builder_method :category
-
-  def set_adress(address)
-    @txn.address = @txn.address ? @txn.address += "\n#{address}" : address
-    self
-  end
-
-  alias :set_address :set_adress
-
-  def add_split(split)
-    Qif::Transaction::Split::Builder.new(self).tap do |split_builder|
-      @splits << split_builder
-      split_builder.set_split_category(split)
-    end
-  end
+  set_builder_method :commission
+  set_builder_method :transfer_account
+  set_builder_method :transfer_amount
 
   def build
-    @splits.each do |split_builder|
-      @txn.splits << split_builder.build_split
-    end
     @txn
   end
 
