@@ -1,7 +1,6 @@
 = Library for reading Quicken Interchange Format (QIF) files
 
-* Forked from http://github.com/jemmyw/Qif, then modified to support investment
-records.
+Forked from http://github.com/jemmyw/Qif, then modified to support investment records.
 
 === LICENSE:
 
