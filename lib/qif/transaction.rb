@@ -4,19 +4,19 @@ module Qif
   # The Qif::Transaction class represents transactions in a qif file.
   class Transaction
     SUPPORTED_FIELDS = {
-      :date           => {"D" => "Date"                                                              },
-      :action         => {"N" => "Action"                                                            },
-      :security         => {"Y" => "Security"                                                    },
-      :price         => {"I" => "Price"                                   },
-      :quantity          => {"Q" => "Quantity"                                                             },
-      :transaction_amount           => {"T" => "Transaction amount"                                                              },
-      :cleared_status         => {"C" => "Cleared status" },
-      :reminders       => {"P" => "Text in the first line for transfers and reminders"                    },
-      :memo       => {"M" => "Memo"                    },
-      :commission       => {"O" => "Comission"                    },
-      :transfer_account       => {"L" => "Account for the transfer"                    },
-      :transfer_amount       => {"$" => "Amount transferred"                    },
-      :end            => {"^" => "End of entry"                                                      }
+      :date               => {"D" => "Date"                                                              },
+      :action             => {"N" => "Action"                                                            },
+      :security           => {"Y" => "Security"                                                          },
+      :price              => {"I" => "Price"                                                             },
+      :quantity           => {"Q" => "Quantity"                                                          },
+      :transaction_amount => {"T" => "Transaction amount"                                                },
+      :cleared_status     => {"C" => "Cleared status"                                                    },
+      :reminders          => {"P" => "Text in the first line for transfers and reminders"                },
+      :memo               => {"M" => "Memo"                                                              },
+      :commission         => {"O" => "Comission"                                                         },
+      :transfer_account   => {"L" => "Account for the transfer"                                          },
+      :transfer_amount    => {"$" => "Amount transferred"                                                },
+      :end                => {"^" => "End of entry"                                                      }
     }
     SUPPORTED_FIELDS.keys.each{|s| attr_accessor s}
 
